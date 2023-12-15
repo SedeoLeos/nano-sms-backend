@@ -12,13 +12,13 @@ const links = [
       icon: 'dashicons:lock-duplicate',
       name: 'Tokens',
       sub: '3',
-      to: '/dashboard/tokens'
+      to: '/dashboard/token'
    },
    {
       icon: 'dashicons:admin-users',
       name: 'Users',
       sub: '',
-      to: '/dashboard/user'
+      to: '/dashboard/users'
    },
    {
       icon: 'dashicons:rest-api',
@@ -30,19 +30,18 @@ const links = [
       icon: 'dashicons:admin-generic',
       name: 'Settings',
       sub: '',
-      to: '/dashboard/app'
+      to: '/dashboard/settings'
    }
 ]
-const drawer = useState('drawed',()=>true)
-function handledrawer () {
-   drawer.value = ! drawer.value
-}
+const drawer = useState<any>('drawer:state')
+const {toogle } = useDrawer();
+
 </script>
 
 <template>
    <aside
-   :class="drawer?'fixed':'hidden'"
-      class="fixed top-0 flex flex-col left-0 z-40 w-72 h-screen transition-transform -translate-x-full  bg-alfa sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700">
+      :class="drawer.layout.sidbar"
+      class="fixed top-0 flex flex-col left-0 z-40 w-72 h-screen bg-alfa dark:bg-gray-800 dark:border-gray-700">
       <div class="flex  h-20 items-center  space-x-5 justify-center">
          <div class="bg-slate-900 p-1 rounded-lg">
             <UIcon class="text-white text-[25px]" name="bx:bxs-message-square-dots" dynamic />
@@ -52,7 +51,7 @@ function handledrawer () {
          </span>
       </div>
       <button
-      @click="handledrawer"
+      @click="toogle"
          class="absolute top-6 -right-3 flex items-center justify-center bg-white hover:text-white active:ring-2 active:ring-gray-500 hover:bg-zinc-400 p-1 hover:shadow-slate-700 rounded-full shadow-lg">
          <UIcon class="text-[20px]" name="bx:chevron-left" dynamic />
       </button>
