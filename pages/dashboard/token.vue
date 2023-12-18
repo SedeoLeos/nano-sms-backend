@@ -1,9 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>
-    Page: foo
-  </div>
+ <TableData/>
 </template>
 
 <style scoped></style>

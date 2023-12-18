@@ -16,17 +16,6 @@ export default defineNuxtConfig({
       ],
     }
   },
-  tailwindcss: {
-    config: {
-      theme: {
-        extend: {
-          colors: {
-            alfa: "#fafafa",
-            secondary:"#E5E5E5"
-          }
-        }
-      }
-    }}
 
 })
 

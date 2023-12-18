@@ -10,14 +10,27 @@ const setTheme = () => {
 
   }
 }
+const application = computed(()=>{
+  const element =[]
+  for (let index = 0; index < 30; index++) {
+    element.push(
+        {
+          name:'app'+index,
+          src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Annie',
+        }
+    );
+    
+  }
+  return element;
+})
 </script>
 
 <template>
   <div :class="drawer.layout.navbar"
-    class="fixed h-20 border-b dark:border-gray-600 backdrop-blur-md top-0 right-0 z-30 flex justify-between px-2 items-center">
-    <div>
+    class="fixed h-20 text-gray-500 dark:text-white border-b dark:border-gray-600 backdrop-blur-md top-0 right-0 z-30 flex justify-between px-5 items-center">
+    <div class="flex flex-row items-center justify-center space-x-1">
       <button @click="toogle" type="button" :class="drawer.layout.button"
-        class="items-center p-1 mt-2 ms-3 text-sm text-gray-500 rounded-lg  z-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        class="items-center justify-center p-1  ms-3 text-sm text-gray-500 rounded-lg  z-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
         <span class="sr-only">Open sidebar</span>
         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +39,10 @@ const setTheme = () => {
           </path>
         </svg>
       </button>
-
+      <div>
+        <UBreadcrumb divider="/"
+          :links="[{ label: 'Home', to: '/', }, { label: 'Navigation' }, { label: 'Breadcrumb' }]" />
+      </div>
     </div>
 
     <div class="flex items-center space-x-3">
@@ -47,6 +63,32 @@ const setTheme = () => {
       <div class="flex items-center space-x-2">
         <UIcon name="bx:calendar-alt" dynamic />
         <span class="text-[11px]">Mon, 31 jan 2021 </span>
+      </div>
+      <div class="flex space-x-2 justify-center items-center">
+          <UPopover :popper="{ }">
+            <button class="  hover:bg-blue-100 ease-in  active:ring-1 active:ring-blue-300 ring-none stroke-teal-50 w-7 h-7 rounded-sm">
+              <UIcon name="bx:bxs-category" dynamic />
+            </button>
+            <template   #panel>
+              <div class="p-2">
+
+                <div class="h-60 overflow-y-scroll overflow-x-hidden grid grid-cols-4 gap-5 p-4 ">
+                  <div v-for="(app, index) in application" :class="index==0?' bg-blue-500 text-white':'bg-blue-50 text-gray-700'" class=" rounded-3xl w-24 h-24  p-1"  :key="index">
+                      <div class="h-full flex flex-col text-xs space-y-2 justify-center items-center rounded-lg">
+                        <div class="flex justify-center items-center">
+                          <img :src="app.src" class="object-cover w-11" alt="">
+                        </div>
+                        <div class="flex justify-center items-center ">{{ app.name }}</div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+        </UPopover>
+        
+        <button class="border-4 rounded-full border-blue-300">
+                  <img class="object-cover w-5" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Annie" />
+        </button>
       </div>
 
     </div>
