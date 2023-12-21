@@ -1,27 +1,16 @@
-
 <script lang="ts" setup>
-const columns = [{
-    key: 'id',
-    label: 'ID'
-}, {
-    key: 'name',
-    label: 'Name',
-    sortable: true
-}, {
-    key: 'title',
-    label: 'Title',
-    sortable: true
-}, {
-    key: 'email',
-    label: 'Email',
-    sortable: true,
-    direction: 'desc'
-}, {
-    key: 'role',
-    label: 'Role'
-},{
-  key: 'actions'
-}]
+type ColumnProps = {
+    key:string;
+    label:string;
+    sortable:boolean
+    class?:string,
+    direction?: "desc" | "asc"
+}
+const props = defineProps<{
+    columns: ColumnProps[]
+
+}>()
+
 
 const people = [{
     id: 1,
@@ -101,6 +90,7 @@ const items = (row) => [
     icon: 'i-heroicons-trash-20-solid'
   }]
 ]
+console.log(props)
 </script>
 
 <template>
@@ -158,7 +148,7 @@ const items = (row) => [
                 :loading="false"
                 :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
                 v-model="selected" 
-                :columns="columns" 
+                :columns="props.columns" 
                 :rows="filteredRows" 
                 @select="select" 
                 :sort="{ column: 'title' }" 

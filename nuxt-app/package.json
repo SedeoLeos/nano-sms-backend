@@ -12,11 +12,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "nuxt": "^3.8.2",
-    "tailwind-scrollbar": "^3.0.5",
-    "vue": "^3.3.10",
+    "vue": "^3.3.12",
     "vue-router": "^4.2.5"
-  },
-  "dependencies": {
-    "@nuxt/ui": "^2.11.1"
   }
 }
