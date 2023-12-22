@@ -37,7 +37,7 @@ const links = [
       icon: 'dashicons:rest-api',
       name: 'Template',
       color: 'text-violet-500',
-      to: '/dashboard/app'
+      to: '/dashboard/sms-template'
    },
    {
       icon: 'dashicons:admin-generic',

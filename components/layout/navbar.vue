@@ -77,29 +77,32 @@ const application = computed(() => {
               <UIcon name="bx:bxs-category" dynamic />
             </button>
             <template class="right-0" #panel>
-              <div class="p-2">
-                <div>
-                  <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-                    <div class="relative">
-                      <input type="text" placeholder="Filter app..." 
-                      class="relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" >
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="h-80 overflow-y-scroll overflow-x-hidden scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 grid grid-cols-4 gap-5 p-4 ">
-                  <div v-for="(app, index) in application"
-                    :class="index == 0 ? ' bg-blue-500 text-white' : 'bg-blue-50 text-gray-700'"
-                    class="rounded-3xl w-24 h-24  p-1 cursor-pointer ease-out active:bg-blue-500 hover:bg-blue-300" :key="index">
-                    <div class="h-full  flex flex-col text-xs space-y-2 justify-center items-center rounded-lg">
-                      <div class="flex justify-center items-center">
-                        <img :src="app.src" class="object-cover w-11" alt="">
+                <div class="p-2">
+                  <div>
+                    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+                      <div class="relative">
+                        <input type="text" placeholder="Filter app..." 
+                        class="relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" >
                       </div>
-                      <div class="flex justify-center items-center ">{{ app.name }}</div>
                     </div>
                   </div>
+              <NuxtScrollbar tag="aside" @ps-scroll-y="onScroll">
+
+                  <div
+                    class="h-80  grid grid-cols-4 gap-5 p-4 ">
+                    <div v-for="(app, index) in application"
+                      :class="index == 0 ? ' bg-blue-500 text-white' : 'bg-blue-50 text-gray-700'"
+                      class="rounded-3xl w-24 h-24  p-1 cursor-pointer ease-out active:bg-blue-500 hover:bg-blue-300" :key="index">
+                      <div class="h-full  flex flex-col text-xs space-y-2 justify-center items-center rounded-lg">
+                        <div class="flex justify-center items-center">
+                          <img :src="app.src" class="object-cover w-11" alt="">
+                        </div>
+                        <div class="flex justify-center items-center ">{{ app.name }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </NuxtScrollbar>
                 </div>
-              </div>
             </template>
           </UPopover>
           <button class="border-4 rounded-full border-blue-300">

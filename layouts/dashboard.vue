@@ -8,7 +8,7 @@ const { drawer, toogle } = useDrawer();
     <LayoutNavbar />
     <LayoutSidbar />
     <div :class="drawer.layout.main" class="p-4 absolute top-20 z-0 right-0 ">
-      <div class="w-full">
+      <div class="w-full p-5">
         <slot />
 
       </div>

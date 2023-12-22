@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { object, ObjectSchema, string } from 'yup';
 
 const people = [{
@@ -49,7 +49,8 @@ const columns = [{
     label: 'Description',
     sortable: true,
     direction: 'desc'
-}, ]
+},
+ ]
 const page = ref(1)
 const pageCount = 5
 
@@ -70,13 +71,12 @@ const schema = object({
     .min(8, 'Must be at least 8 characters')
     .required('Required')
 })
-const fields = [{label:'Email', name:'email',type:'email'},{label:'Password', name:'password',type:'password'}]
+const fields = [{label:'name', name:'name',type:'text'},{label:'Message', name:'message',type:'textarea'}]
 </script>
 
 <template>
-  
-    <TableData  @button-clicked="onOpenModal" :columns="columns" :rows="people" :action-function="items" :table-info="{title:'Settings', desc:'No match found for location with path'}" />
-    <FormModal :fields="fields" :is-open="open" @close="onClose" title="Ajouter settings"/>
+  <TableData  @button-clicked="onOpenModal" :columns="columns" :rows="people" :action-function="items" :table-info="{title:'Configurer un template sms', desc:'Optimisez votre efficacité en générant des modèles de SMS personnalisés que vous pourrez réutiliser à tout moment. Simplifiez vos communications en créant des templates SMS adaptés à vos besoins spécifiques, et gagnez du temps tout en garantissant la cohérence de vos messages.'}" />
+  <FormModal :fields="fields" :is-open="open" @close="onClose" title="Configurer un template"/>
 </template>
 
 <style scoped></style>

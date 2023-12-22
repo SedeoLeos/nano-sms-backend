@@ -1,56 +1,40 @@
 <script lang="ts" setup>
-type ColumnProps = {
+
+export type ColumnProps = {
     key:string;
-    label:string;
-    sortable:boolean
-    class?:string,
-    direction?: "desc" | "asc"
+    label:string,
+    sortable?: boolean ;
+    direction?: "desc" | "asc" ;
+    class?: string ;
 }
+type RowProps = {
+    [key: string]: any;
+    click?: Function | undefined;
+}
+type TableInfo = {
+    title:string,
+    desc:string;
+}
+
 const props = defineProps<{
-    columns: ColumnProps[]
+    columns?: ColumnProps[],
+    rows?: RowProps [],
+    tableInfo?:TableInfo,
+    actionFunction?:Function,
+    isSelect:boolean,
+
 
 }>()
-
-
-const people = [{
-    id: 1,
-    name: 'Lindsay Walton',
-    title: 'Front-end Developer',
-    email: 'lindsay.walton@example.com',
-    role: 'Member'
-}, {
-    id: 2,
-    name: 'Courtney Henry',
-    title: 'Designer',
-    email: 'courtney.henry@example.com',
-    role: 'Admin'
-}, {
-    id: 3,
-    name: 'Tom Cook',
-    title: 'Director of Product',
-    email: 'tom.cook@example.com',
-    role: 'Member'
-}, {
-    id: 4,
-    name: 'Whitney Francis',
-    title: 'Copywriter',
-    email: 'whitney.francis@example.com',
-    role: 'Admin'
-}, {
-    id: 5,
-    name: 'Leonard Krasner',
-    title: 'Senior Designer',
-    email: 'leonard.krasner@example.com',
-    role: 'Owner'
-}, {
-    id: 6,
-    name: 'Floyd Miles',
-    title: 'Principal Designer',
-    email: 'floyd.miles@example.com',
-    role: 'Member'
-}]
-const selected = ref([people[1]])
-function select(row) {
+const emits = defineEmits<{
+  (e: 'button-clicked'): void
+  (e: 'update', value: string): void
+}>()
+const handleButtonClick = () => {
+  // Émettre un événement personnalisé lors du clic sur le bouton
+  emits('button-clicked');
+};
+const selected = ref([props.rows?[1]:null])
+function select(row:any) {
     const index = selected.value.findIndex((item) => item.id === row.id)
     if (index === -1) {
         selected.value.push(row)
@@ -62,54 +46,37 @@ const q = ref('')
 
 const filteredRows = computed(() => {
     if (!q.value) {
-        return people
+        return props.rows;
     }
-
-    return people.filter((person) => {
-        return Object.values(person).some((value) => {
+    console.log( props.rows.values);
+    return props.rows.filter((items) => {
+        return Object.values(items).some((value) => {
             return String(value).toLowerCase().includes(q.value.toLowerCase())
         })
     })
 })
-const items = (row) => [
-  [{
-    label: 'Edit',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', row.id)
-  }, {
-    label: 'Duplicate',
-    icon: 'i-heroicons-document-duplicate-20-solid'
-  }], [{
-    label: 'Archive',
-    icon: 'i-heroicons-archive-box-20-solid'
-  }, {
-    label: 'Move',
-    icon: 'i-heroicons-arrow-right-circle-20-solid'
-  }], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash-20-solid'
-  }]
-]
-console.log(props)
+
 </script>
 
 <template>
     <div class="m-2 space-y-2 shadow-xl p-5">
-        <div class="sm:flex sm:items-center sm:justify-between">
-            <div>
+        <div class="space-x-5 sm:flex sm:items-center sm:justify-between">
+            <div class="flex-[2]">
                 <div class="flex items-center gap-x-3">
-                    <h2 class="text-lg font-medium text-gray-800 dark:text-white">Customers</h2>
+                    <h2 class="text-lg font-medium text-gray-800 dark:text-white" v-if="tableInfo?.title">{{ tableInfo.title }}</h2>
+                    <h2 class="text-lg font-medium text-gray-800 dark:text-white" v-else>Empty table infon</h2>
 
                     <span
-                        class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">240
-                        vendors</span>
+                        class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400">{{rows.length}}</span>
                 </div>
-
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">These companies have purchased in the last 12
-                    months.</p>
+                <div>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300"  v-if="tableInfo?.desc">{{ tableInfo.desc }}</p>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300"  v-else> is missing template or render function.</p>
+                </div>
             </div>
 
-            <div class="flex items-center mt-4 gap-x-3">
+            <div class="flex-1 flex  justify-center items-center mt-4 gap-x-3">
+               
                 <button
                     class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +95,7 @@ console.log(props)
                     <span>Import</span>
                 </button>
 
-                <button
+                <button @click="handleButtonClick"
                     class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
@@ -136,28 +103,28 @@ console.log(props)
                             d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
 
-                    <span>Add vendor</span>
+                    <span>Importer contact</span>
                 </button>
             </div>
         </div>
         <div>
             <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-                <UInput v-model="q" placeholder="Filter people..." />
+                <UInput v-model="q" placeholder="Filter les element..." />
             </div>
             <UTable
                 :loading="false"
                 :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
                 v-model="selected" 
-                :columns="props.columns" 
+                :columns="columns" 
                 :rows="filteredRows" 
                 @select="select" 
-                :sort="{ column: 'title' }" 
+                :sort="{ column: 'title', direction:'desc' }" 
             >
-                <template #name-data="{ row }">
+                <template v-if="isSelect" #name-data="{ row }">
                     <span :class="[selected.find(person => person.id === row.id) && 'text-primary-500 dark:text-primary-400']">{{ row.name }}</span>
                 </template>
                 <template #actions-data="{ row }">
-                    <UDropdown :items="items(row)">
+                    <UDropdown v-if="actionFunction" :items="actionFunction(row)">
                         <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                     </UDropdown>
                 </template>
