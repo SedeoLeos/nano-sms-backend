@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import type { ColumnProps, TableInfo } from '~/components/table-data.vue';
+import { object, ObjectSchema, string } from 'yup';
+
 
 const columns: ColumnProps[] = [{
   key: 'id',
@@ -68,10 +70,24 @@ const tabe_info: TableInfo = {
   title: 'API Key',
   desc: ''
 }
+const schema = object({
+    email: string().email('Invalid email').required('Required'),
+    password: string()
+        .min(8, 'Must be at least 8 characters')
+        .required('Required')
+})
+const fields = [{ label: 'name', name: 'name', type: 'text' }, { label: 'Message', name: 'message', type: 'textarea' }]
+const open = ref(false)
+const onOpenModal = () => {
+    open.value = true;
+}
+const onClose = () => {
+    open.value = false;
+}
 </script>
 <template>
   <TableData :table-info="tabe_info" :columns="columns" :is-select="true" :rows="people" :action-function="items">
-    <button
+    <button @click="onOpenModal"
       class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-5 h-5">
@@ -105,18 +121,8 @@ const tabe_info: TableInfo = {
                         <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                     </UDropdown>
     </template>
-    <!-- <template #name-data="{ row }">
-        <UButton
-          v-if="!row.completed"
-          icon="i-heroicons-check"
-          size="2xs"
-          color="emerald"
-          variant="outline"
-          :ui="{ rounded: 'rounded-full' }"
-          square
-        />
-      </template> -->
   </TableData>
+  <FormModal :fields="fields" :is-open="open" @close="onClose" title="Configurer un template" />
 </template>
 
 <style scoped></style>

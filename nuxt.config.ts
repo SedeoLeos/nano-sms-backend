@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
-  modules: ['@nuxt/ui', '@davestewart/nuxt-scrollbar'],
+  modules: ['@nuxt/ui', '@davestewart/nuxt-scrollbar', '@samk-dev/nuxt-vcalendar'],
   app: {
     head: {
       link: [{

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { object, ObjectSchema, string, type InferType } from 'yup';
 import type { FormSubmitEvent } from '#ui/types';
-
+import { DatePicker as VCalendarDatePicker } from 'v-calendar'
 
 const props = defineProps<{
   title: string;
   isOpen: boolean;
-  fields: Array<{ label: string; name: string; type: string }>;
+  fields: Array<{ label: string; name: string; type: string, data?: any }>;
   schema: ObjectSchema<any>;
 }>();
 
@@ -35,6 +35,13 @@ const emits = defineEmits<{
 const handleClose = () => {
   emits('close');
 };
+const date = ref(new Date())
+
+const dataLabel = (date:Date) => {
+  const _date = date ?? new Date();
+  return _date.toLocaleDateString('en-us', { weekday: 'long',  month: 'short', day: 'numeric' }) 
+}
+
 </script>
 
 <template>
@@ -49,10 +56,20 @@ const handleClose = () => {
         </div>
       </template>
 
-      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup v-for="field in props.fields" :key="field.name" :label="field.label" :name="field.name">
-          <UInput v-if="field.type === 'email'" v-model="state[field.name]" />
-          <UInput v-else-if="field.type === 'password'" v-model="state[field.name]" type="password" />
+      <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4 flex  flex-wrap">
+        <UFormGroup v-for="field in props.fields" :key="field.name" :label="field.label" :name="field.name" class="w-full">
+            <UInput v-if="field.type === 'email'" v-model="state[field.name]" :class="'flex-[1]'" />
+            <UInput v-if="field.type === 'text'" v-model="state[field.name]" />
+            <UInput v-else-if="field.type === 'password'" v-model="state[field.name]" type="password" />
+            <UTextarea :rows="10" v-else-if="field.type === 'textarea'" v-model="state[field.name]" autoresize />
+            <USelect v-else-if="field.type === 'select'" v-model="state[field.name]" :options="field.data" />
+            <UPopover v-else-if="field.type === 'date'" :popper="{ placement: 'bottom-start' }">
+              <UButton icon="i-heroicons-calendar-days-20-solid" :label="dataLabel(state[field.name])" />
+              <template #panel="{ close }">
+                <VCalendarDatePicker v-model="state[field.name]" @close="close" />
+              </template>
+            </UPopover>
+
           <!-- Ajoutez d'autres types de champs selon vos besoins -->
         </UFormGroup>
 

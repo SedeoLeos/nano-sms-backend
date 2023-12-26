@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import type { ColumnProps, TableInfo } from '~/components/table-data.vue';
+import { object, ObjectSchema, string } from 'yup';
+
 
 const columns: ColumnProps[] = [{
   key: 'id',
@@ -24,7 +26,7 @@ const columns: ColumnProps[] = [{
 const sms_plannifier = [{
   id: 1,
   name: 'Bonne année',
-  recurrence:{
+  recurence:{
     type:'Annuelle',
     date_run:'',
     every:1
@@ -40,7 +42,7 @@ const sms_plannifier = [{
 }, {
   id: 2,
   name: 'Fin de congé',
-  recurrence:{
+  recurence:{
     type:'Days',
     date_run:new Date(),
     every:1,
@@ -79,10 +81,45 @@ const tabe_info: TableInfo = {
   title: 'Plannifier vos sms',
   desc: ''
 }
+const open = ref(false)
+const onOpenModal = () => {
+    open.value = true;
+}
+const onClose = () => {
+    open.value = false;
+}
+const schema = object({
+    email: string().email('Invalid email').required('Required'),
+    password: string()
+        .min(8, 'Must be at least 8 characters')
+        .required('Required')
+})
+const fields = [
+  { label: 'name', name: 'name', type: 'text' }, 
+  { label: 'Reccurence', 
+    name: 'reccurence', 
+    type: 'select',
+    data: ['Tous les deux Jour','Tous les Jour','Tous les Mois','Tous les Ans'] },
+  {
+
+    label: 'Template',
+    name: 'template', 
+    type: 'select',
+    data: ['Template 1','Template 1','Template 1','Template 1'],
+
+  },{
+
+label: 'Date',
+name: 'date', 
+type: 'date',
+
+},
+  ]
+
 </script>
 <template>
   <TableData :table-info="tabe_info" :columns="columns" :is-select="true" :rows="sms_plannifier" :action-function="items">
-    <button
+    <button @click="onOpenModal"
       class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-5 h-5">
@@ -98,8 +135,8 @@ const tabe_info: TableInfo = {
     <template #create_at-data="{row}">
       <UBadge size="xs" :label="new Date(row.create_at).toLocaleString() " color="blue" variant="subtle" />
     </template>
-    <template #recurrence-data="{row}">
-      <UBadge size="xs" :label="new Date().toLocaleString() " color="blue" variant="soft" />
+    <template #recurence-data="{row}">
+      <UBadge size="xs" :label="row.recurence.type" color="blue" variant="soft" />
     </template>
     <template #template-data="{row}">
       <UBadge size="xs" :label="row.template.name" color="blue" variant="subtle" />
@@ -109,18 +146,9 @@ const tabe_info: TableInfo = {
                         <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                     </UDropdown>
     </template>
-    <!-- <template #name-data="{ row }">
-        <UButton
-          v-if="!row.completed"
-          icon="i-heroicons-check"
-          size="2xs"
-          color="emerald"
-          variant="outline"
-          :ui="{ rounded: 'rounded-full' }"
-          square
-        />
-      </template> -->
+    
   </TableData>
+  <FormModal :fields="fields" :is-open="open" @close="onClose" title="Configurer un template" />
 </template>
 
 <style scoped></style>

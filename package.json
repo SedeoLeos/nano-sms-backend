@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@samk-dev/nuxt-vcalendar": "^1.0.2",
     "nuxt": "^3.8.2",
     "tailwind-scrollbar": "^3.0.5",
     "vue": "^3.3.10",

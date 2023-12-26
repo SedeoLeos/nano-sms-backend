@@ -93,6 +93,7 @@ const application = computed(() => {
                     <div v-for="(app, index) in application"
                       :class="index == 0 ? ' bg-blue-500 text-white' : 'bg-blue-50 text-gray-700'"
                       class="rounded-3xl w-24 h-24  p-1 cursor-pointer ease-out active:bg-blue-500 hover:bg-blue-300" :key="index">
+                      <input type="radio" id="job-2" name="job" value="job-2" class="hidden peer">
                       <div class="h-full  flex flex-col text-xs space-y-2 justify-center items-center rounded-lg">
                         <div class="flex justify-center items-center">
                           <img :src="app.src" class="object-cover w-11" alt="">

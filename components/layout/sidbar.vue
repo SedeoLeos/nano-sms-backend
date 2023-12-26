@@ -15,26 +15,26 @@ const links = [
       to: '/dashboard/task'
    },
    {
-      icon: 'dashicons:rest-api',
+      icon: 'i-bx-transfer',
       name: 'Mes transaction',
       color: 'text-sky-500',
-      to: '/dashboard/app'
+      to: '/dashboard/transaction'
 
    },
    {
-      icon: 'dashicons:rest-api',
-      name: 'Gérer les applications',
+      icon: 'i-bx-key',
+      name: 'Gérer les api key',
       color: 'text-red-500',
       to: '/dashboard/api-key'
    },
    {
-      icon: 'dashicons:rest-api',
+      icon: 'i-bx-bxs-id-card',
       name: 'Mes Contact',
       color: 'text-indigo-500',
-      to: '/dashboard/app'
+      to: '/dashboard/contact'
    },
    {
-      icon: 'dashicons:rest-api',
+      icon: 'i-bx-bxs-message-edit',
       name: 'Template',
       color: 'text-violet-500',
       to: '/dashboard/sms-template'
