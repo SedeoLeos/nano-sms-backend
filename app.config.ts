@@ -7,6 +7,5 @@ export default defineAppConfig({
     },
     plugins: [
         // ...
-        TailwindScrollBar.default,
     ],
 })

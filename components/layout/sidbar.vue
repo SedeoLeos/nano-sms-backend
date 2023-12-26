@@ -9,10 +9,10 @@ const links = [
 
    },
    {
-      icon: 'dashicons:lock-duplicate',
+      icon: 'dashicons:calendar',
       name: 'Planification SMS',
       color: 'text-blue-500',
-      to: '/dashboard/token'
+      to: '/dashboard/task'
    },
    {
       icon: 'dashicons:rest-api',
@@ -25,7 +25,7 @@ const links = [
       icon: 'dashicons:rest-api',
       name: 'Gérer les applications',
       color: 'text-red-500',
-      to: '/dashboard/app'
+      to: '/dashboard/api-key'
    },
    {
       icon: 'dashicons:rest-api',
