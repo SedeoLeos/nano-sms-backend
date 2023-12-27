@@ -78,7 +78,7 @@ const fields = [{ label: 'name', name: 'name', type: 'text' }, { label: 'Message
   <TableData @button-clicked="onOpenModal" :columns="columns" :rows="people" :action-function="items"
     :table-info="{ title: 'Contact', desc: '' }">
     <template #default>
-      <button
+      <button @click="onOpenModal"
         class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_3098_154395)">
@@ -102,7 +102,7 @@ const fields = [{ label: 'name', name: 'name', type: 'text' }, { label: 'Message
       </button>
     </template>
   </TableData>
-  <FormModal :fields="fields" :is-open="open" @close="onClose" title="Configurer un template" />
+  <Stepper :isOpen="open" @close="onClose" />
 </template>
 
 <style scoped></style>

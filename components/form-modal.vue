@@ -1,4 +1,44 @@
 <script setup lang="ts">
+interface CalendarDay {
+  id: string;
+  dayIndex: number;
+  day: number;
+  dayFromEnd: number;
+  weekday: number;
+  weekdayOrdinal: number;
+  weekdayOrdinalFromEnd: number;
+  week: number;
+  weekFromEnd: number;
+  weeknumber: number;
+  month: number;
+  year: number;
+  date: Date;
+  position: number;
+  label: string;
+  ariaLabel: string;
+  weekdayPosition: number;
+  weekdayPositionFromEnd: number;
+  weekPosition: number;
+  isoWeeknumber: number;
+  startDate: Date;
+  noonDate: Date;
+  endDate: Date;
+  isToday: boolean;
+  isFirstDay: boolean;
+  isLastDay: boolean;
+  isDisabled: boolean;
+  isFocusable: boolean;
+  inMonth: boolean;
+  inPrevMonth: boolean;
+  inNextMonth: boolean;
+  onTop: boolean;
+  onBottom: boolean;
+  onLeft: boolean;
+  onRight: boolean;
+  classes: Array<string | Object>;
+  locale: Locale;
+}
+
 import { object, ObjectSchema, string, type InferType } from 'yup';
 import type { FormSubmitEvent } from '#ui/types';
 import { DatePicker as VCalendarDatePicker } from 'v-calendar'
@@ -37,11 +77,14 @@ const handleClose = () => {
 };
 const date = ref(new Date())
 
-const dataLabel = (date:Date) => {
+const dataLabel = (date: Date) => {
   const _date = date ?? new Date();
-  return _date.toLocaleDateString('en-us', { weekday: 'long',  month: 'short', day: 'numeric' }) 
+  return _date.toLocaleDateString('en-us', { weekday: 'long', month: 'short', day: 'numeric' })
 }
 
+
+const days = ref([ '2019/02/01', '2019/02/10' ])
+const menu = ref(false);
 </script>
 
 <template>
@@ -57,19 +100,21 @@ const dataLabel = (date:Date) => {
       </template>
 
       <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4 flex  flex-wrap">
-        <UFormGroup v-for="field in props.fields" :key="field.name" :label="field.label" :name="field.name" class="w-full">
-            <UInput v-if="field.type === 'email'" v-model="state[field.name]" :class="'flex-[1]'" />
-            <UInput v-if="field.type === 'text'" v-model="state[field.name]" />
-            <UInput v-else-if="field.type === 'password'" v-model="state[field.name]" type="password" />
-            <UTextarea :rows="10" v-else-if="field.type === 'textarea'" v-model="state[field.name]" autoresize />
-            <USelect v-else-if="field.type === 'select'" v-model="state[field.name]" :options="field.data" />
-            <UPopover v-else-if="field.type === 'date'" :popper="{ placement: 'bottom-start' }">
-              <UButton icon="i-heroicons-calendar-days-20-solid" :label="dataLabel(state[field.name])" />
-              <template #panel="{ close }">
-                <VCalendarDatePicker v-model="state[field.name]" @close="close" />
-              </template>
-            </UPopover>
-
+        <UFormGroup v-for="field in props.fields" :key="field.name" :label="field.label" :name="field.name"
+          class="w-full">
+          <UInput v-if="field.type === 'email'" v-model="state[field.name]" :class="'flex-[1]'" />
+          <UInput v-if="field.type === 'text'" v-model="state[field.name]" />
+          <UInput v-else-if="field.type === 'password'" v-model="state[field.name]" type="password" />
+          <UTextarea :rows="10" v-else-if="field.type === 'textarea'" v-model="state[field.name]" autoresize />
+          <USelect v-else-if="field.type === 'select'" v-model="state[field.name]" :options="field.data" />
+          <UPopover v-else-if="field.type === 'date'" :popper="{ placement: 'bottom-start' }">
+            <UButton icon="i-heroicons-calendar-days-20-solid" :label="state[field.name]" >
+            </UButton>
+            <template #panel="{ close }">
+              <!-- <VCalendarDatePicker model="multiple" v-model="state[field.name]" @close="close" /> -->
+              <q-date v-model="state[field.name]" multiple />
+            </template>
+          </UPopover>
           <!-- Ajoutez d'autres types de champs selon vos besoins -->
         </UFormGroup>
 

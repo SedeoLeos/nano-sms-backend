@@ -26,39 +26,39 @@ const columns: ColumnProps[] = [{
 const sms_plannifier = [{
   id: 1,
   name: 'Bonne année',
-  recurence:{
-    type:'Annuelle',
-    date_run:'',
-    every:1
+  recurence: {
+    type: 'Annuelle',
+    date_run: '',
+    every: 1
   },
-  template:{
-    id:1,
-    name:'Message de fëte',
-    message:'Bonne année á vous #contact.name ainsi nous vous avons fais cadeau de 10000 xaf au #contact.telephone'
+  template: {
+    id: 1,
+    name: 'Message de fëte',
+    message: 'Bonne année á vous #contact.name ainsi nous vous avons fais cadeau de 10000 xaf au #contact.telephone'
   },
   update_at: new Date(),
   team: 'Nano creatives',
-  
+
 }, {
   id: 2,
   name: 'Fin de congé',
-  recurence:{
-    type:'Days',
-    date_run:new Date(),
-    every:1,
-    end_date:new Date(),
+  recurence: {
+    type: 'Days',
+    date_run: new Date(),
+    every: 1,
+    end_date: new Date(),
   },
-  template:{
-    id:1,
-    name:'Message de fin de congé',
-    message:`J'espère que ce message vous trouve bien. Je tiens à vous informer que votre période de congé préalablement approuvée arrive à sa fin. pour la date  #config.date_end`
+  template: {
+    id: 1,
+    name: 'Message de fin de congé',
+    message: `J'espère que ce message vous trouve bien. Je tiens à vous informer que votre période de congé préalablement approuvée arrive à sa fin. pour la date  #config.date_end`
   },
   update_at: new Date(),
   create_at: new Date(),
   team: 'Soa cash',
-  
+
 },]
-const items = (row:any) => [
+const items = (row: any) => [
   [{
     label: 'Edit',
     icon: 'i-heroicons-pencil-square-20-solid',
@@ -83,38 +83,39 @@ const tabe_info: TableInfo = {
 }
 const open = ref(false)
 const onOpenModal = () => {
-    open.value = true;
+  open.value = true;
 }
 const onClose = () => {
-    open.value = false;
+  open.value = false;
 }
 const schema = object({
-    email: string().email('Invalid email').required('Required'),
-    password: string()
-        .min(8, 'Must be at least 8 characters')
-        .required('Required')
+  email: string().email('Invalid email').required('Required'),
+  password: string()
+    .min(8, 'Must be at least 8 characters')
+    .required('Required')
 })
 const fields = [
-  { label: 'name', name: 'name', type: 'text' }, 
-  { label: 'Reccurence', 
-    name: 'reccurence', 
+  { label: 'name', name: 'name', type: 'text' },
+  {
+    label: 'Reccurence',
+    name: 'reccurence',
     type: 'select',
-    data: ['Tous les deux Jour','Tous les Jour','Tous les Mois','Tous les Ans'] },
+    data: ['Tous les deux Jour', 'Tous les Jour', 'Tous les Mois', 'Tous les Ans']
+  },
   {
 
     label: 'Template',
-    name: 'template', 
+    name: 'template',
     type: 'select',
-    data: ['Template 1','Template 1','Template 1','Template 1'],
+    data: ['Template 1', 'Template 1', 'Template 1', 'Template 1'],
 
-  },{
-
-label: 'Date',
-name: 'date', 
-type: 'date',
-
-},
-  ]
+  }, {
+    label: 'Date',
+    name: 'date',
+    type: 'date',
+    data:[]
+  },
+]
 
 </script>
 <template>
@@ -127,26 +128,26 @@ type: 'date',
       </svg>
       <span>Crée une nouvelle Plannifier </span>
     </button>
-    <template #name-data="{row}">
-      <UBadge size="xs"  color="emerald" variant="subtle" >
-          {{ row.name }}
-        </UBadge>
+    <template #name-data="{ row }">
+      <UBadge size="xs" color="emerald" variant="subtle">
+        {{ row.name }}
+      </UBadge>
     </template>
-    <template #create_at-data="{row}">
-      <UBadge size="xs" :label="new Date(row.create_at).toLocaleString() " color="blue" variant="subtle" />
+    <template #create_at-data="{ row }">
+      <UBadge size="xs" :label="new Date(row.create_at).toLocaleString()" color="blue" variant="subtle" />
     </template>
-    <template #recurence-data="{row}">
+    <template #recurence-data="{ row }">
       <UBadge size="xs" :label="row.recurence.type" color="blue" variant="soft" />
     </template>
-    <template #template-data="{row}">
+    <template #template-data="{ row }">
       <UBadge size="xs" :label="row.template.name" color="blue" variant="subtle" />
     </template>
     <template #actions-data="{ row }">
-                    <UDropdown  :items="items(row)">
-                        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-                    </UDropdown>
+      <UDropdown :items="items(row)">
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+      </UDropdown>
     </template>
-    
+
   </TableData>
   <FormModal :fields="fields" :is-open="open" @close="onClose" title="Configurer un template" />
 </template>

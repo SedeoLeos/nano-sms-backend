@@ -21,6 +21,8 @@ const items = (
     icon: 'i-heroicons-trash-20-solid'
   }]
 ]
+const dates =ref( ['2018-09-15', '2018-09-20'])
+      const menu = ref(false)
 </script>
 
 <template>
@@ -48,6 +50,9 @@ const items = (
     </div>
    
   </div>
+  
+ 
+
 </template>
 
 <style scoped></style>
