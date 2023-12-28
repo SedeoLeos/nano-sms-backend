@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 const { drawer, toogle } = useDrawer();
-
+definePageMeta({
+  // middleware: ["auth"]
+  // or middleware: 'auth'
+})
 
 </script>
 <template>

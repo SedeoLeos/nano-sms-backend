@@ -1,5 +1,58 @@
 <script lang="ts" setup>
 setPageLayout('default')
+import { useQuasar } from 'quasar'
+import { object, string } from 'yup';
+const $q = useQuasar()
+const loginFormSchema = object().shape({
+    email: string().required().email(),
+    password: string().required(),
+});
+const formInput = reactive({
+  email: "",
+  password: "",
+});
+function validate(field:"email" | "password") {
+    loginFormSchema
+        .validateAt(field, form_value.value)
+        .then(() => {
+            form_error.value[field] = "";
+        })
+        .catch(err => {
+            console.log(err)
+            console.log(field,form_error.value[field])
+            form_error.value[field] = err.message;
+        });
+}
+async function  loginUser() {
+  
+  try{
+    await loginFormSchema.validate(form_value.value, { abortEarly: false })
+    form_error.value = {email:'',password:''};
+   const { data,error } = await useAuth().Login(form_value.value);
+   console.log(error.value)
+   if(data.value){
+   
+     await navigateTo('/dashboard')
+     const { data:dataI } = data.value;
+    //  localStorage.setItem('user', JSON.stringify(dataI))
+
+
+   }
+    
+  }catch(err:any){
+    err.inner.forEach((error: { path: string; message: string; }) => {
+        form_error.value[error.path as "email" | "password"] = error.message;
+    });
+
+  }
+       
+}
+
+const form_value = ref({ email: "gedeon.matsoula@nanocreatives.com", password: "c6nSDq5x66MKlUc@" })
+const form_error = ref({ email: "", password: "" })
+
+
+// const { } = await useAuth().Login();
 </script>
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -8,42 +61,46 @@ setPageLayout('default')
         <div>
           <img src="https://nanocreatives.com/wp-content/uploads/2023/08/nanocreatives-logo.png" class="w-52 mx-auto" />
         </div>
-       <div class="md:h-32 h-9"></div>
+        <div class="md:h-32 h-9"></div>
         <div class="mt-12 flex flex-col items-center">
           <h1 class="text-2xl xl:text-3xl font-extrabold">
             Sign up
           </h1>
           <div class="w-full flex-1 mt-8">
-            <div class="mx-auto max-w-xs">
-              <input
-                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                type="email" placeholder="Email" />
-              <input
-                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                type="password" placeholder="Password" />
-              <button
-                class="mt-5 tracking-wide font-semibold bg-slate-500 text-gray-100 w-full py-4 rounded-lg hover:bg-slate-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                  <circle cx="8.5" cy="7" r="4" />
-                  <path d="M20 8v6M23 11h-6" />
-                </svg>
-                <span class="ml-3">
-                  Sign Up
-                </span>
-              </button>
-              <p class="mt-6 text-xs text-gray-600 text-center">
-                I agree to abide by templatana's
-                <a href="#" class="border-b border-gray-500 border-dotted">
-                  Terms of Service
-                </a>
-                and its
-                <a href="#" class="border-b border-gray-500 border-dotted">
-                  Privacy Policy
-                </a>
-              </p>
-            </div>
+            <form @submit.prevent="loginUser">
+              <div class="mx-auto max-w-xs">
+
+
+                <input v-model="form_value.email"
+                  class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="email" placeholder="Email" />
+                <input v-model="form_value.password"
+                  class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                  type="password" placeholder="Password" />
+                <button type="submit"
+                  class="mt-5 tracking-wide font-semibold bg-slate-500 text-gray-100 w-full py-4 rounded-lg hover:bg-slate-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                  <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="8.5" cy="7" r="4" />
+                    <path d="M20 8v6M23 11h-6" />
+                  </svg>
+                  <span class="ml-3">
+                    Sign Up
+                  </span>
+                </button>
+                <p class="mt-6 text-xs text-gray-600 text-center">
+                  I agree to abide by templatana's
+                  <a href="#" class="border-b border-gray-500 border-dotted">
+                    Terms of Service
+                  </a>
+                  and its
+                  <a href="#" class="border-b border-gray-500 border-dotted">
+                    Privacy Policy
+                  </a>
+                </p>
+              </div>
+            </form>
           </div>
         </div>
       </div>
