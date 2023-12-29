@@ -1,48 +1,45 @@
 <script lang="ts" setup>
 setPageLayout('default')
-
-import { object, string } from 'yup';
+import { useQuasar } from 'quasar'
+import { object, string, ref as YupRef } from 'yup';
 const $q = useQuasar()
-const loginFormSchema = object().shape({
+const registerFormSchema = object().shape({
   email: string().required().email(),
-  password: string().required(),
+  username: string().optional().min(4),
+  password: string().required().min(4),
+  cpassword: string().oneOf([YupRef('password'),], 'Passwords must match'),
 });
 
-const storeLogin = useLoginStore()
 
-function validate(field: "email" | "password") {
-  loginFormSchema
+function validate(field: "email" | "password" | 'username' | 'cpassword') {
+  registerFormSchema
     .validateAt(field, form_value.value)
     .then(() => {
       form_error.value[field] = "";
     })
     .catch(err => {
-      console.log(err)
-      console.log(field, form_error.value[field])
       form_error.value[field] = err.message;
     });
 }
 async function loginUser() {
 
   try {
-    await loginFormSchema.validate(form_value.value, { abortEarly: false })
-    form_error.value = { email: '', password: '' };
-    const response = await useAuth().Login(form_value.value);
+    await registerFormSchema.validate(form_value.value, { abortEarly: false })
+    form_error.value = { email: '', password: '', cpassword: '', username: '' };
+    const response = await useAuth().Register(form_value.value);
     if (!response) {
-      return 0;
+      return;
     }
     const { data, error } = response;
     console.log(error.value)
     if (data.value) {
 
-      const { data: dataI } = data.value;
-      storeLogin.authentificated(dataI)
       await navigateTo('/dashboard')
-      //  localStorage.setItem('user', JSON.stringify(dataI))
+      const { data: dataI } = data.value;
+
     }
 
   } catch (err: any) {
-
     if (err.inner) {
       err.inner.forEach((error: { path: string; message: string; }) => {
         form_error.value[error.path as "email" | "password"] = error.message;
@@ -53,8 +50,8 @@ async function loginUser() {
 
 }
 
-const form_value = ref({ email: "gedeon.matsoula@nanocreatives.com", password: "c6nSDq5x66MKlUc@" })
-const form_error = ref({ email: "", password: "" })
+const form_value = ref({ email: "", password: "", cpassword: '', username: '' })
+const form_error = ref({ email: '', password: '', cpassword: '', username: '' })
 
 
 // const { } = await useAuth().Login();
@@ -62,31 +59,35 @@ const form_error = ref({ email: "", password: "" })
 <template>
   <div class="min-h-screen  text-gray-900 flex justify-center ">
     <div class="max-w-screen-xl m-0 sm:m-10 bg-white overflow-hidden sm:rounded-xl shadow-2xl flex justify-center flex-1">
-      <div class="sm:hidden md:flex md:flex-1 sm:flex-1 bg-blue-500 text-center overflow-hidden">
+      <div class="max-[540px]:hidden sm:flex  sm:visible flex-1 bg-blue-500  text-center overflow-hidden">
         <img class="m-12  bg-cover  bg-center bg-no-repeat" src="/undraw_message_sent_re_q2kl.svg" />
       </div>
       <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12 flex flex-col justify-center item-center">
 
-        <div class="flex flex-col items-center justify-center space-y-3  flex-1 ">
-          <div class="h-40 justify-center items-center">
+        <div class="flex flex-col items-center justify-center flex-1 ">
+          <div class="h-40  flex justify-center items-center">
             <h1 class="text-4xl sm:text-6xl font-bold">
               Nano <span class="text-white bg-blue-500 p-1 rounded-lg">SMS</span>
             </h1>
           </div>
           <div class=" max-w-xs w-full flex items-start">
-            <h3 class="text-lg font-extrabold">Connecté vous à votre compte</h3>
+
+            <h3 class="text-lg font-extrabold">Crée un votre compte</h3>
           </div>
-         
           <div class="w-full mt-4 flex items-center justify-center">
             <form @submit.prevent="loginUser">
               <div class="mx-auto max-w-xs">
                 <div class="space-y-5">
-                  <AuthInput v-model="form_value.email" @validate="validate('email')"
-                    placeholder="sample@nanocreatives.com" type="email" :error="form_error.email" />
+                  
+                  <AuthInput v-model="form_value.email" @validate="validate('email')" placeholder="sample@nanocreatives.com"
+                    type="email" :error="form_error.email" />
+                  <AuthInput v-model="form_value.username" @validate="validate('username')" placeholder="joe@12" type="text"
+                    :error="form_error.username" />
 
-                  <AuthInput v-model="form_value.password" @validate="validate('password')"
-                    placeholder="votre mot de passe" type="password" :error="form_error.password" />
-
+                  <AuthInput v-model="form_value.password" @validate="validate('password')" placeholder="votre mot de passe"
+                    type="password" :error="form_error.password" />
+                  <AuthInput v-model="form_value.cpassword" @validate="validate('cpassword')"
+                    placeholder="confirmer votre mot de passe" type="password" :error="form_error.cpassword" />
                 </div>
                 <p class="text-center m-2">
                   Mot de passe oublie ?
@@ -104,12 +105,12 @@ const form_error = ref({ email: "", password: "" })
                     <path d="M20 8v6M23 11h-6" />
                   </svg>
                   <span class="ml-3">
-                    Connexion
+                    S' enregistrer
                   </span>
                 </button>
                 <p class="text-center p-2">
-                  Vous n'avez pas de compte ?
-                  <NuxtLink to="/register"
+                  Vous avez déja un compte ?
+                  <NuxtLink to="login"
                     class="text-blue-500 hover:text-blue-600 cursor-pointer transition-all duration-300 ease-in-out">
                     Cliquez ici
                   </NuxtLink>
@@ -133,8 +134,7 @@ const form_error = ref({ email: "", password: "" })
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
-<!-- <style scoped></style> -->
+<style scoped></style>

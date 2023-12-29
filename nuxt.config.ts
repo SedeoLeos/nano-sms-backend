@@ -1,12 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  runtimeConfig:{
+  runtimeConfig: {
     public: {
       base_url: process.env.BASE_URL,
     }
   },
-  modules: ['@nuxt/ui', '@davestewart/nuxt-scrollbar', '@samk-dev/nuxt-vcalendar','@invictus.codes/nuxt-vuetify','nuxt-quasar-ui'],
+  modules: ['@nuxt/ui',
+    '@davestewart/nuxt-scrollbar',
+    '@samk-dev/nuxt-vcalendar',
+    '@invictus.codes/nuxt-vuetify',
+    'nuxt-quasar-ui',
+    '@pinia/nuxt', // needed
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   app: {
     head: {
       link: [{
@@ -21,5 +31,18 @@ export default defineNuxtConfig({
       ],
     }
   },
+  quasar: {
+    plugins: [
+      'BottomSheet',
+      'Dialog',
+      'Loading',
+      'LoadingBar',
+      'Notify',
+      'Dark',
+    ],
+  },
+  routeRules: {
+    '/api/**': { proxy: { to: "https://nanoauth.internal.nncrtvs.xyz/**" } }
+  }
 
 })
